@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import bcrypt from "bcryptjs";
 import sequelize from "../config/db.js";
 
-const User = sequelize.define("User", {
+const Dummy = sequelize.define("Dummy", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -28,27 +28,26 @@ const User = sequelize.define("User", {
     unique: true,
     validate: { isEmail: true },
   },
-  project: {
-    type: DataTypes.STRING,
-    allowNull: false,  
-  },
   password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  otp: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-User.beforeCreate(async (user) => {
+Dummy.beforeCreate(async (user) => {
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
 });
 
-User.beforeUpdate(async (user) => {
+Dummy.beforeUpdate(async (user) => {
   if (user.changed("password")) {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
   }
 });
 
-
-export default User;
+export default Dummy;
